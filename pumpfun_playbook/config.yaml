@@ -1,1 +1,220 @@
+# config.yaml
+
+# General configuration
+general:
+  project_name: "TrenchSight"
+  ticker: "TNS"
+  log_level: "INFO"
+
+# Blockchain configuration
+blockchain:
+  networks:
+    ethereum:
+      rpc_url: "https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID"
+      chain_id: 1
+      gas_price: "50"  # in gwei
+      lookback_blocks: 10000
+    polygon:
+      rpc_url: "https://polygon-rpc.com/"
+      chain_id: 137
+      gas_price: "50"  # in gwei
+      lookback_blocks: 10000
+  contracts_path: "contracts"
+  build_path: "build"
+  solc_version: "0.8.17"
+  contracts:
+    - name: "MyToken.sol"
+      network: "ethereum"
+      constructor_args: ["TokenName", "TNS", 1000000]
+    - name: "AnotherContract.sol"
+      network: "polygon"
+      constructor_args: ["AnotherToken", "ANT", 500000]
+
+# Twitter scanning configuration
+twitter_scanning:
+  consumer_key: "YOUR_TWITTER_CONSUMER_KEY"
+  consumer_secret: "YOUR_TWITTER_CONSUMER_SECRET"
+  access_token: "YOUR_TWITTER_ACCESS_TOKEN"
+  access_token_secret: "YOUR_TWITTER_ACCESS_TOKEN_SECRET"
+  keywords:
+    - "crypto"
+    - "DeFi"
+    - "NFT"
+  kafka:
+    bootstrap_servers:
+      - "localhost:9092"
+    topic: "twitter_stream"
+
+# Wallet scanning configuration
+wallet_scanning:
+  kafka:
+    bootstrap_servers:
+      - "localhost:9092"
+    topic: "wallet_scans"
+  lookback_blocks: 10000
+  wallets_to_scan_path: "data/wallets_to_scan.json"
+
+# Web scanning configuration
+web_scanning:
+  websites:
+    - url: "https://pump.fun/trenches?page={}"
+      parse_rules:
+        project_name:
+          selector: ".project-name"
+        price:
+          selector: ".price"
+        volume:
+          selector: ".volume"
+      pagination:
+        pages: 5
+    - url: "https://anotherwebsite.com/listings?page={}"
+      parse_rules:
+        project_name:
+          selector: ".listing-name"
+        volume:
+          selector: ".volume"
+      pagination:
+        pages: 3
+  scraping:
+    headers:
+      User-Agent: "TrenchSightBot/1.0"
+  selenium:
+    enable: true
+    driver_path: "/path/to/chromedriver"
+    wait_time: 5
+  kafka:
+    bootstrap_servers:
+      - "localhost:9092"
+    topic: "web_scans"
+
+# Telegram scanning configuration
+telegram_scanning:
+  api_id: 123456
+  api_hash: "YOUR_TELEGRAM_API_HASH"
+  bot_token: "YOUR_TELEGRAM_BOT_TOKEN"
+  channels:
+    - "cryptocurrency_updates"
+    - "defi_news"
+  processing_rules:
+    project_name:
+      type: "regex"
+      pattern: "Project Name: (\\w+)"
+    price_alert:
+      type: "keyword"
+      keyword: "price"
+    metadata:
+      type: "json_extract"
+      key: "metadata"
+  kafka:
+    bootstrap_servers:
+      - "localhost:9092"
+    topic: "telegram_stream"
+
+# Bundle scanning configuration
+bundle_scanning:
+  kafka:
+    bootstrap_servers:
+      - "localhost:9092"
+    topics:
+      - "twitter_stream"
+      - "telegram_stream"
+      - "web_scans"
+      - "wallet_scans"
+    group_id: "bundle_scanning_group"
+    output_topic: "ai_processing"
+  ai_service:
+    api_endpoint: "https://ai.trenchsight.com/process"
+    api_key: "YOUR_AI_SERVICE_API_KEY"
+  aggregation_rules:
+    project_name:
+      source: "twitter_stream"
+      field: "project_name"
+      operation: "copy"
+    price:
+      source: "web_scans"
+      field: "price"
+      operation: "copy"
+    sentiment:
+      source: "telegram_stream"
+      field: "sentiment"
+      operation: "copy"
+
+# Smart contract deployment configuration
+deploy_contracts:
+  networks:
+    ethereum:
+      rpc_url: "https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID"
+      chain_id: 1
+      gas_price: "50"  # in gwei
+    polygon:
+      rpc_url: "https://polygon-rpc.com/"
+      chain_id: 137
+      gas_price: "50"  # in gwei
+  contracts_path: "contracts"
+  build_path: "build"
+  solc_version: "0.8.17"
+  contracts:
+    - name: "MyToken.sol"
+      network: "ethereum"
+      constructor_args: ["TokenName", "TNS", 1000000]
+    - name: "AnotherContract.sol"
+      network: "polygon"
+      constructor_args: ["AnotherToken", "ANT", 500000]
+
+# Data Cleaner configuration
+data_cleaner:
+  missing_values: "fill"  # options: 'drop', 'fill'
+  fill_values:
+    price: 0.0
+    volume: 0.0
+    sentiment: "neutral"
+  data_types:
+    price: "float"
+    volume: "float"
+    timestamp: "datetime64[ns]"
+
+# WebScanning general settings
+web_scanning_general:
+  data_ingestion:
+    normalization_engine: "standard"
+  swarm_ai_core:
+    scout_agents:
+      enabled: true
+    vigil_agents:
+      enabled: true
+    consensus_protocol:
+      secure_messaging: true
+
+# Application & Governance Layer configuration
+application_governance:
+  main_account_page:
+    display_metrics:
+      - aggregated_market_insights
+      - trending_tokens
+      - governance_proposals
+  agents_page:
+    live_feed: true
+  governance_module:
+    on_chain_voting: true
+    proposals_require: "threshold"
+
+# DevOps & Infrastructure configuration
+devops_infrastructure:
+  ci_cd_pipelines:
+    enabled: true
+    tools:
+      - "GitHub Actions"
+      - "Docker"
+  decentralized_storage:
+    provider: "IPFS"
+    endpoints:
+      - "https://ipfs.infura.io:5001"
+  monitoring:
+    tools:
+      - "Prometheus"
+      - "Grafana"
+    custom_dashboards:
+      - "system_performance"
+      - "agent_accuracy"
+      - "security_alerts"
 
