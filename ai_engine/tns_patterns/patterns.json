@@ -1,1 +1,147 @@
+{
+  "twitter_scanning": {
+    "keywords": [
+      "crypto",
+      "DeFi",
+      "NFT",
+      "yield farming",
+      "rug pull",
+      "airdrop",
+      "token launch",
+      "liquidity pool",
+      "staking rewards"
+    ],
+    "regex_patterns": [
+      "\\b(presale|pre-sale|private sale)\\b",
+      "\\b(verified|audit|secure)\\b",
+      "0x[a-fA-F0-9]{40}"
+    ]
+  },
+  "telegram_scanning": {
+    "keywords": [
+      "crypto",
+      "DeFi",
+      "NFT",
+      "pump",
+      "dump",
+      "rug pull",
+      "token launch",
+      "liquidity lock",
+      "audit",
+      "verified"
+    ],
+    "regex_patterns": [
+      "Project Name: (\\w+)",
+      "Total Supply: (\\d+)",
+      "Liquidity Locked: (Yes|No)",
+      "Audit Status: (Passed|Failed)",
+      "Contract Address: (0x[a-fA-F0-9]{40})"
+    ]
+  },
+  "web_scanning": {
+    "keywords": [
+      "crypto",
+      "DeFi",
+      "NFT",
+      "new token",
+      "launch",
+      "airdrop",
+      "presale",
+      "private sale",
+      "verified",
+      "audit"
+    ],
+    "regex_patterns": [
+      "Total Supply:\\s*(\\d+)",
+      "Liquidity Pool:\\s*(Yes|No)",
+      "Contract Address:\\s*(0x[a-fA-F0-9]{40})",
+      "Audit Report:\\s*(\\w+)",
+      "Launch Date:\\s*(\\d{4}-\\d{2}-\\d{2})"
+    ]
+  },
+  "wallet_scanning": {
+    "suspicious_patterns": [
+      {
+        "pattern": "high_frequency",
+        "description": "More than 100 transactions within an hour",
+        "threshold": 100
+      },
+      {
+        "pattern": "large_transactions",
+        "description": "Transactions exceeding 1000 ETH",
+        "threshold": 1000
+      },
+      {
+        "pattern": "repeated_recipients",
+        "description": "More than 10 transactions to the same address",
+        "threshold": 10
+      },
+      {
+        "pattern": "liquidity_pull",
+        "description": "Sudden withdrawal of liquidity",
+        "indicator": "liquidity pool balance drops by >50%"
+      }
+    ]
+  },
+  "transaction_patterns": {
+    "rug_pull_detection": {
+      "keywords": [
+        "rug pull",
+        "exit scam",
+        "pull liquidity",
+        "honeypot"
+      ],
+      "regex_patterns": [
+        "liquidity locked: no",
+        "contract verified: false",
+        "audit failed",
+        "developer wallet: (0x[a-fA-F0-9]{40})"
+      ]
+    },
+    "honeypot_detection": {
+      "keywords": [
+        "honeypot",
+        "buy only",
+        "sell disabled"
+      ],
+      "regex_patterns": [
+        "sell function disabled",
+        "only owner can sell",
+        "transfer restrictions"
+      ]
+    }
+  },
+  "smart_contract_patterns": {
+    "anomaly_detection": {
+      "patterns": [
+        {
+          "function": "transfer",
+          "modifier": "onlyOwner",
+          "description": "Transfer function restricted to owner only"
+        },
+        {
+          "function": "approve",
+          "modifier": "public",
+          "description": "Approve function is publicly accessible"
+        },
+        {
+          "function": "renounceOwnership",
+          "modifier": "public",
+          "description": "Ownership can be renounced by anyone"
+        }
+      ]
+    }
+  },
+  "ai_model_features": {
+    "token_launch": [
+      "project_name",
+      "total_supply",
+      "liquidity_pool",
+      "team_reputation",
+      "market_sentiment",
+      "social_media_engagement",
+      "contract_audit"
+    ]
+  }
+}
 
